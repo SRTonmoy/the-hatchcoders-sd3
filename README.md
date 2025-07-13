@@ -15,7 +15,8 @@ A modern and responsive Login/Register interface with a dashboard inspired by Go
 ## 📸 Screenshots
 
 ### Login / Register Interface
-![Login UI](screenshots/login.jpeg)
+![Login UI](screenshots/login.png)
+![Register UI](screenshots/register.png)
 
 ### Dashboard (After Login)
 ![Dashboard UI](screenshots/dashboard.jpeg)
