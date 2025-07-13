@@ -3,49 +3,167 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>T.Nestia Dashboard</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
+  <title>T.Nestia Student Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="dashboard.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(145deg, #2c2f36, #23262b);
+      color: #f1f1f1;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    header h1 span {
+      color: #4dabf7;
+    }
+    button {
+      background: #383c44;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 5px 0;
+    }
+    button:hover {
+      background: #4a4f58;
+    }
+    .dashboard-content {
+      background: #2f323a;
+      padding: 25px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+      box-shadow: 5px 5px 15px #1d1f24, -5px -5px 15px #3c3f47;
+    }
+    textarea, input[type="file"] {
+      width: 100%;
+      margin: 5px 0 10px;
+    }
+  </style>
 </head>
 <body>
+
   <header>
-    <h1>Welcome, <span id="username">User</span>!</h1>
-    <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <h1>Welcome, <span id="username">Student</span>!</h1>
+    <button onclick="window.location.href='index.html'"><i class="fas fa-sign-out-alt"></i> Logout</button>
   </header>
 
-  <main>
-    <section class="info">
-      <h2>Your Info</h2>
-      <p>Email: <span id="userEmail">user@example.com</span></p>
-      <p>Role: <span id="userRole">Student</span></p>
-    </section>
+  <section class="dashboard-content">
+    <h2>📚 My Classes</h2>
+    <button onclick="showAttachmentUpload()">📌 Upload Attachment</button>
+    <button onclick="createNewPost()">📝 Create New Post</button>
+    <button onclick="submitAssignment()">📄 Submit Assignment</button>
+    <div id="myClassesOutput"></div>
+  </section>
 
-    <section class="dashboard-content">
-      <h2>Dashboard</h2>
-      <p>This is your dashboard content area. You can add stats, charts, or anything here.</p>
-    </section>
-  </main>
+  <section class="dashboard-content">
+    <h2>📢 View Announcements</h2>
+    <button onclick="loadAnnouncements()">🔄 Refresh</button>
+    <ul id="announcementList"></ul>
+  </section>
+
+  <section class="dashboard-content">
+    <h2>📘 Course Details</h2>
+    <ul>
+      <li><strong>Add/Drop Deadline:</strong> August 20, 2025</li>
+      <li><strong>Last Date of Registration:</strong> August 15, 2025</li>
+    </ul>
+  </section>
+
+  <section class="dashboard-content">
+    <h2>🗓 Schedule</h2>
+    <button onclick="alert('Routine loaded.')">📖 View Class Routine</button>
+    <button onclick="downloadCalendar()">📅 Download Yearly Calendar</button>
+    <button onclick="alert('Seat plan loaded.')">📌 View Seat Plan</button>
+  </section>
+
+  <section class="dashboard-content">
+    <h2>📄 Document Access</h2>
+    <button onclick="alert('Reported ID card lost')">🇩🇭 ID Card Lost</button>
+    <button onclick="alert('Request sent for transcript')">📄 Transcript Need</button>
+    <button onclick="alert('Download started')">⬇️ Download Semester-wise Transcript</button>
+  </section>
+
+  <section class="dashboard-content">
+    <h2>🕵️ Anonymous Post</h2>
+    <textarea placeholder="Write something anonymously..."></textarea><br>
+    <button onclick="alert('Anonymous post submitted!')">Send</button>
+  </section>
+
+  <section class="dashboard-content">
+    <h2>🏆 Competitive Programming</h2>
+    <button onclick="alert('You are enrolled!')">💻 Enroll Now</button>
+  </section>
+
+  <section class="dashboard-content">
+    <h2>🎉 Participate in Event</h2>
+    <p><strong>Intra Competitions:</strong></p>
+    <button onclick="alert('Registered for Football')">⚽ Football</button>
+    <button onclick="alert('Registered for Cricket')">🏏 Cricket</button>
+    <button onclick="alert('Registered for Badminton')">🏸 Badminton</button>
+  </section>
+
+  <section class="dashboard-content">
+    <h2>⚠️ Report System Failure</h2>
+    <button onclick="alert('AC issue reported')">❄️ AC Not Working</button>
+    <button onclick="alert('Projector issue reported')">🔦 Projector Not Working</button>
+    <button onclick="alert('Computer issue reported')">🖥️ Computer Not Working</button>
+  </section>
 
   <script>
-    // Dummy data, replace with real user data
-    const user = {
-      name: "Meher Balaam Jihad",
-      email: "meherabalamjihad@gmail.com",
-      role: "Student",
-    };
+    function showAttachmentUpload() {
+      document.getElementById("myClassesOutput").innerHTML = `
+        <p><strong>Upload Attachment:</strong></p>
+        <input type="file" />
+        <button onclick="alert('Attachment uploaded!')">Upload</button>
+      `;
+    }
 
-    document.getElementById("username").textContent = user.name;
-    document.getElementById("userEmail").textContent = user.email;
-    document.getElementById("userRole").textContent = user.role;
+    function createNewPost() {
+      document.getElementById("myClassesOutput").innerHTML = `
+        <p><strong>Create Post:</strong></p>
+        <textarea rows="3" placeholder="Type your post here..."></textarea><br>
+        <button onclick="alert('Post submitted!')">Post</button>
+      `;
+    }
 
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      // Example: Redirect to login page after logout
-      window.location.href = "index.html";
-    });
+    function submitAssignment() {
+      document.getElementById("myClassesOutput").innerHTML = `
+        <p><strong>Submit Assignment:</strong></p>
+        <input type="file" /><br>
+        <textarea rows="2" placeholder="Optional comments..."></textarea><br>
+        <button onclick="alert('Assignment submitted!')">Submit</button>
+      `;
+    }
+
+    function loadAnnouncements() {
+      const announcements = [
+        "📅 Midterm exam starts next week.",
+        "📅 Library will remain closed on Friday."
+      ];
+      const list = document.getElementById("announcementList");
+      list.innerHTML = "";
+      announcements.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        list.appendChild(li);
+      });
+    }
+
+    function downloadCalendar() {
+      const link = document.createElement("a");
+      link.href = "calendar2025.pdf";
+      link.download = "T-Nestia_Yearly_Calendar_2025.pdf";
+      link.click();
+    }
   </script>
 </body>
 </html>
