@@ -47,6 +47,14 @@
       width: 100%;
       margin: 5px 0 10px;
     }
+    .anonymous{
+      background-color: #333b49;
+      border-radius: 15px;
+      border-color: black;=
+    }
+    .anonymous:hover{
+      color: #4dabf7;
+    }
   </style>
 </head>
 <body>
@@ -94,7 +102,7 @@
 
   <section class="dashboard-content">
     <h2>🕵️ Anonymous Post</h2>
-    <textarea placeholder="Write something anonymously..."></textarea><br>
+    <textarea class="anonymous" placeholder="Write something anonymously..."></textarea><br>
     <button onclick="alert('Anonymous post submitted!')">Send</button>
   </section>
 
@@ -164,6 +172,7 @@
       link.download = "T-Nestia_Yearly_Calendar_2025.pdf";
       link.click();
     }
+    
   </script>
 </body>
 </html>
