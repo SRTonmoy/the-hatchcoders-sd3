@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>T.Nestia Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <header>
+    <h1>Welcome, <span id="username">User</span>!</h1>
+    <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </header>
+
+  <main>
+    <section class="info">
+      <h2>Your Info</h2>
+      <p>Email: <span id="userEmail">user@example.com</span></p>
+      <p>Role: <span id="userRole">Student</span></p>
+    </section>
+
+    <section class="dashboard-content">
+      <h2>Dashboard</h2>
+      <p>This is your dashboard content area. You can add stats, charts, or anything here.</p>
+    </section>
+  </main>
+
+  <script>
+    // Dummy data, replace with real user data
+    const user = {
+      name: "Meher Balaam Jihad",
+      email: "meherabalamjihad@gmail.com",
+      role: "Student",
+    };
+
+    document.getElementById("username").textContent = user.name;
+    document.getElementById("userEmail").textContent = user.email;
+    document.getElementById("userRole").textContent = user.role;
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      // Example: Redirect to login page after logout
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
