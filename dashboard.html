@@ -1,178 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
   <title>T.Nestia Student Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(145deg, #2c2f36, #23262b);
-      color: #f1f1f1;
-      min-height: 100vh;
-      padding: 20px;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #1f1f25;
+      color: #fff;
+      overflow-x: hidden;
     }
-    header {
+
+    .header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 40px;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: #15151b;
+      box-shadow: 0 0 10px #00000044;
     }
-    header h1 span {
-      color: #4dabf7;
-    }
-    button {
-      background: #383c44;
+
+    .hamburger {
+      background: none;
       border: none;
-      padding: 10px 18px;
-      border-radius: 10px;
       color: white;
-      font-weight: bold;
       cursor: pointer;
-      margin: 5px 0;
     }
-    button:hover {
-      background: #4a4f58;
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -220px;
+      width: 220px;
+      height: 100%;
+      background: #111119;
+      padding-top: 60px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+      box-shadow: 5px 0 15px #0005;
     }
-    .dashboard-content {
-      background: #2f323a;
-      padding: 25px;
-      border-radius: 20px;
-      margin-bottom: 30px;
-      box-shadow: 5px 5px 15px #1d1f24, -5px -5px 15px #3c3f47;
+
+    .sidebar.show {
+      left: 0;
     }
-    textarea, input[type="file"] {
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .sidebar a:hover {
+      background: #2a2a3a;
+    }
+
+    .sidebar a .tooltip {
+      position: absolute;
+      left: 100%;
+      margin-left: 5px;
+      padding: 4px 8px;
+      background: #333;
+      color: white;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .sidebar a:hover .tooltip {
+      display: block;
+    }
+
+    .logout-btn {
+      position: absolute;
+      bottom: 20px;
       width: 100%;
-      margin: 5px 0 10px;
+      border-top: 1px solid #444;
     }
-    .anonymous{
-      background-color: #333b49;
-      border-radius: 15px;
-      border-color: black;
+
+    main {
+      padding: 2rem;
+      margin-left: 0;
+      transition: margin-left 0.3s ease;
     }
-    .anonymous:hover{
-      color: #4dabf7;
+
+    .sidebar.show ~ main {
+      margin-left: 220px;
+    }
+
+    section {
+      display: none;
+      background: #2b2b38;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px #0003;
+    }
+
+    section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .welcome {
+      text-align: center;
+      padding: 100px 20px;
+    }
+
+    .welcome h1 {
+      font-size: 2.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+      }
+      .sidebar.show ~ main {
+        margin-left: 0;
+      }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Welcome, <span id="username">Student</span>!</h1>
-    <button onclick="window.location.href='index.html'"><i class="fas fa-sign-out-alt"></i> Logout</button>
-  </header>
+  <div class="header">
+    <button class="hamburger" onclick="toggleSidebar()">
+      <i data-lucide="menu"></i>
+    </button>
+    <h2>Welcome, <span style="color: #4ea1ff;">Student!</span></h2>
+    <button onclick="location.href='index.html'" style="padding: 6px 10px; border: none; background: #333; color: white; border-radius: 5px;">Logout</button>
+  </div>
 
-  <section class="dashboard-content">
-    <h2>📚 My Classes</h2>
-    <button onclick="showAttachmentUpload()">📌 Upload Attachment</button>
-    <button onclick="createNewPost()">📝 Create New Post</button>
-    <button onclick="submitAssignment()">📄 Submit Assignment</button>
-    <div id="myClassesOutput"></div>
-  </section>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <a href="#" onclick="showSection('classes')"><i data-lucide="book"></i> My Classes <span class="tooltip">Upload & Submit</span></a>
+    <a href="#" onclick="showSection('announcements')"><i data-lucide="megaphone"></i> View Announcements</a>
+    <a href="#" onclick="showSection('courses')"><i data-lucide="file-text"></i> Course Details</a>
+    <a href="#" onclick="showSection('schedule')"><i data-lucide="calendar"></i> Schedule</a>
+    <a href="#" onclick="showSection('documents')"><i data-lucide="file"></i> Document Access</a>
+    <a href="#" onclick="showSection('anonymous')"><i data-lucide="user"></i> Anonymous Post</a>
+    <a href="#" onclick="showSection('cp')"><i data-lucide="code"></i> Competitive Programming</a>
+    <a href="#" onclick="showSection('events')"><i data-lucide="trophy"></i> Participate in Event</a>
+    <a href="#" onclick="showSection('report')"><i data-lucide="alert-triangle"></i> Report System Failure</a>
 
-  <section class="dashboard-content">
-    <h2>📢 View Announcements</h2>
-    <button onclick="loadAnnouncements()">🔄 Refresh</button>
-    <ul id="announcementList"></ul>
-  </section>
+    <div class="logout-btn">
+      <a href="index.html"><i data-lucide="log-out"></i> Logout</a>
+    </div>
+  </div>
 
-  <section class="dashboard-content">
-    <h2>📘 Course Details</h2>
-    <ul>
-      <li><strong>Add/Drop Deadline:</strong> August 20, 2025</li>
-      <li><strong>Last Date of Registration:</strong> August 15, 2025</li>
-    </ul>
-  </section>
+  <!-- Main Content -->
+  <main>
+    <div class="welcome" id="welcomeScreen">
+      <h1>👋 Hello Student!</h1>
+      <p>Use the left menu to explore your dashboard sections.</p>
+    </div>
 
-  <section class="dashboard-content">
-    <h2>🗓 Schedule</h2>
-    <button onclick="alert('Routine loaded.')">📖 View Class Routine</button>
-    <button onclick="downloadCalendar()">📅 Download Yearly Calendar</button>
-    <button onclick="alert('Seat plan loaded.')">📌 View Seat Plan</button>
-  </section>
+    <section id="classes">
+      <h2>📚 My Classes</h2>
+      <button>Upload Attachment</button>
+      <button>Create New Post</button>
+      <button>Submit Assignment</button>
+    </section>
 
-  <section class="dashboard-content">
-    <h2>📄 Document Access</h2>
-    <button onclick="alert('Reported ID card lost')">🇩🇭 ID Card Lost</button>
-    <button onclick="alert('Request sent for transcript')">📄 Transcript Need</button>
-    <button onclick="alert('Download started')">⬇️ Download Semester-wise Transcript</button>
-  </section>
+    <section id="announcements">
+      <h2>📢 View Announcements</h2>
+      <button>Refresh</button>
+    </section>
 
-  <section class="dashboard-content">
-    <h2>🕵️ Anonymous Post</h2>
-    <textarea class="anonymous" placeholder="Write something anonymously..."></textarea><br>
-    <button onclick="alert('Anonymous post submitted!')">Send</button>
-  </section>
+    <section id="courses">
+      <h2>📋 Course Details</h2>
+      <ul>
+        <li>Add/Drop Deadline: August 20, 2025</li>
+        <li>Last Date of Registration: August 15, 2025</li>
+      </ul>
+    </section>
 
-  <section class="dashboard-content">
-    <h2>🏆 Competitive Programming</h2>
-    <button onclick="alert('You are enrolled!')">💻 Enroll Now</button>
-  </section>
+    <section id="schedule">
+      <h2>🗓️ Schedule</h2>
+      <button>View Class Routine</button>
+      <button>Download Yearly Calendar</button>
+      <button>View Seat Plan</button>
+    </section>
 
-  <section class="dashboard-content">
-    <h2>🎉 Participate in Event</h2>
-    <p><strong>Intra Competitions:</strong></p>
-    <button onclick="alert('Registered for Football')">⚽ Football</button>
-    <button onclick="alert('Registered for Cricket')">🏏 Cricket</button>
-    <button onclick="alert('Registered for Badminton')">🏸 Badminton</button>
-  </section>
+    <section id="documents">
+      <h2>📂 Document Access</h2>
+      <button>ID Card Lost</button>
+      <button>Transcript Need</button>
+      <button>Download Semester Transcript</button>
+    </section>
 
-  <section class="dashboard-content">
-    <h2>⚠️ Report System Failure</h2>
-    <button onclick="alert('AC issue reported')">❄️ AC Not Working</button>
-    <button onclick="alert('Projector issue reported')">🔦 Projector Not Working</button>
-    <button onclick="alert('Computer issue reported')">🖥️ Computer Not Working</button>
-  </section>
+    <section id="anonymous">
+      <h2>💬 Anonymous Post</h2>
+      <textarea rows="4" style="width: 100%; background: #1a1a1f; color: white; border: none; border-radius: 8px; padding: 10px;"></textarea>
+      <br><br>
+      <button>Send</button>
+    </section>
+
+    <section id="cp">
+      <h2>👨‍💻 Competitive Programming</h2>
+      <button>Enroll Now</button>
+    </section>
+
+    <section id="events">
+      <h2>🏆 Participate in Event</h2>
+      <button>Football</button>
+      <button>Cricket</button>
+      <button>Badminton</button>
+    </section>
+
+    <section id="report">
+      <h2>🚨 Report System Failure</h2>
+      <button>AC Not Working</button>
+      <button>Projector Not Working</button>
+      <button>Computer Not Working</button>
+    </section>
+  </main>
 
   <script>
-    function showAttachmentUpload() {
-      document.getElementById("myClassesOutput").innerHTML = `
-        <p><strong>Upload Attachment:</strong></p>
-        <input type="file" />
-        <button onclick="alert('Attachment uploaded!')">Upload</button>
-      `;
+    lucide.createIcons();
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('show');
     }
 
-    function createNewPost() {
-      document.getElementById("myClassesOutput").innerHTML = `
-        <p><strong>Create Post:</strong></p>
-        <textarea rows="3" placeholder="Type your post here..."></textarea><br>
-        <button onclick="alert('Post submitted!')">Post</button>
-      `;
-    }
+    function showSection(id) {
+      document.getElementById('welcomeScreen').style.display = 'none';
 
-    function submitAssignment() {
-      document.getElementById("myClassesOutput").innerHTML = `
-        <p><strong>Submit Assignment:</strong></p>
-        <input type="file" /><br>
-        <textarea rows="2" placeholder="Optional comments..."></textarea><br>
-        <button onclick="alert('Assignment submitted!')">Submit</button>
-      `;
-    }
+      const sections = document.querySelectorAll('section');
+      sections.forEach(section => section.classList.remove('active'));
 
-    function loadAnnouncements() {
-      const announcements = [
-        "📅 Midterm exam starts next week.",
-        "📅 Library will remain closed on Friday."
-      ];
-      const list = document.getElementById("announcementList");
-      list.innerHTML = "";
-      announcements.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = item;
-        list.appendChild(li);
-      });
+      document.getElementById(id).classList.add('active');
+      document.getElementById('sidebar').classList.remove('show');
     }
-
-    function downloadCalendar() {
-      const link = document.createElement("a");
-      link.href = "calendar2025.pdf";
-      link.download = "T-Nestia_Yearly_Calendar_2025.pdf";
-      link.click();
-    }
-    
   </script>
 </body>
 </html>
